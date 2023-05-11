@@ -1,5 +1,4 @@
 export const addItemAction = (data) => {
-    console.log(data);
     return {
         type: 'ADD_ITEM',
         payload: data

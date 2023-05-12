@@ -1,16 +1,27 @@
 import {Form} from "./components/form/Form";
 import {List} from "./components/list/List";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
+import {deleteItemAction, updateItemAction} from "./store/actions/list/listAction";
 
 function App() {
 
     const data = useSelector(state => state.listReducer)
-    const [state, setState] = useState(data)
+    const localStorageData = JSON.parse(localStorage.getItem('todo'))
+    const [state, setState] = useState(localStorageData)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        setState(data.state)
-    }, [data])
+        setState(localStorageData)
+    }, [data.state])
+
+    const removeItem = (id) => {
+        dispatch(deleteItemAction(id))
+    }
+
+    const updateItem = (id) => {
+        dispatch(updateItemAction(id))
+    }
 
     return (
         <div className="App">
@@ -22,10 +33,9 @@ function App() {
             <Form/>
             {!!state?.length &&
             state.map(listItem => (
-                    <List data={listItem} />
+                    <List key={listItem.id} data={listItem} updateItem={updateItem} removeItem={removeItem} />
                 ))
             }
-
         </div>
     );
 }

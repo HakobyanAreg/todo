@@ -1,14 +1,17 @@
 import "./Form.scss"
 import {Button} from "../button/Button";
 import {useCallback, useState} from "react";
+import {useDispatch} from "react-redux";
+import {addItemAction} from "../../store/actions/list/listAction";
 
 export const Form = () => {
 
     const initialState = {
-        title: null,
-        description: null,
-        deadline: null
+        title: '',
+        description: '',
+        deadline: ''
     }
+    const dispatch = useDispatch()
 
     const [state, setState] = useState(initialState)
 
@@ -25,21 +28,26 @@ export const Form = () => {
     }, [state])
 
 
+    const addItem = useCallback(() => {
+        dispatch(addItemAction(state))
+        setState(initialState)
+    }, [state])
+
     return (
         <div className="form">
             <div className="inputs-wrapper">
                 <div className="input-wrapper">
-                    <input type="text" placeholder="Title" onChange={handleTitleChange}/>
+                    <input type="text" placeholder="Title" value={state.title} onChange={handleTitleChange}/>
                 </div>
                 <div className="input-wrapper">
-                    <input type="text" placeholder="Description" onChange={handleDescChange}/>
+                    <input type="text" placeholder="Description" value={state.description} onChange={handleDescChange}/>
                 </div>
                 <div className="input-wrapper">
-                    <input type="text" placeholder="Deadline" onChange={handleDeadlineChange}/>
+                    <input type="text" placeholder="Deadline" value={state.deadline} onChange={handleDeadlineChange}/>
                 </div>
             </div>
             <div className="button-wrapper">
-                <Button title={"Add"} formData={state}/>
+                <Button title={"Add"} addItem={addItem}/>
             </div>
         </div>
     )
